@@ -407,6 +407,16 @@ declare module 'next/navigation' {
     url: __next_route_internal_types__.RouteImpl<RouteType>,
     type?: RedirectType
   ): never;
+
+  /**
+   * Get the current pathname. For example, if the URL is
+   * https://example.com/foo?bar=baz, the pathname would be /foo.
+   *
+   * With typed routes enabled, returns the typed route pathname.
+   *
+   * Read more: [Next.js Docs: usePathname](https://nextjs.org/docs/app/api-reference/functions/use-pathname)
+   */
+  export function usePathname<RouteType = string>(): __next_route_internal_types__.RouteImpl<RouteType>;
 }
 
 declare module 'next/form' {

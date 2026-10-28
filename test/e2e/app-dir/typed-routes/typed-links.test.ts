@@ -190,5 +190,37 @@ export default function InvalidRedirects() {
         `Type error: Argument of type '"/another-invalid-route"' is not assignable to parameter of type 'RouteImpl<"/another-invalid-route">'.`
       )
     })
+
+    it('should type usePathname as Route with typed routes enabled', async () => {
+      await next.stop()
+      await next.patchFile(
+        'app/pathname-test.tsx',
+        `
+import type { Route } from 'next'
+import { usePathname, useRouter } from 'next/navigation'
+
+export default function PathnameTest() {
+  const router = useRouter()
+  const pathname = usePathname()
+  const go = (p: Route) => {
+    router.push(p)
+  }
+
+  return (
+    <button onClick={() => go(pathname)}>
+      Test Pathname
+    </button>
+  )
+}
+`
+      )
+
+      const { exitCode } = await next.build()
+      // clean up for future tests
+      await next.deleteFile('app/pathname-test.tsx')
+
+      expect(exitCode).toBe(0)
+    })
   }
 })
+
