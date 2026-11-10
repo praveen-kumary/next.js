@@ -447,18 +447,19 @@ export function getImgProps(
 
   const qualityInt = getInt(quality)
 
-  if (process.env.NODE_ENV !== 'production') {
-    const { warnOnce } =
-      require('./utils/warn-once') as typeof import('./utils/warn-once')
-    if (config.output === 'export' && isDefaultLoader && !unoptimized) {
-      throw new Error(
-        `Image Optimization using the default loader is not compatible with \`{ output: 'export' }\`.
+  if (config.output === 'export' && isDefaultLoader && !unoptimized) {
+    throw new Error(
+      `Image Optimization using the default loader is not compatible with \`{ output: 'export' }\`.
   Possible solutions:
     - Remove \`{ output: 'export' }\` and run "next start" to run server mode including the Image Optimization API.
     - Configure \`{ images: { unoptimized: true } }\` in \`next.config.js\` to disable the Image Optimization API.
   Read more: https://nextjs.org/docs/messages/export-image-api`
-      )
-    }
+    )
+  }
+
+  if (process.env.NODE_ENV !== 'production') {
+    const { warnOnce } =
+      require('./utils/warn-once') as typeof import('./utils/warn-once')
     if (!src) {
       // React doesn't show the stack trace and there's
       // no `src` to help identify which image, so we

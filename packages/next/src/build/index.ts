@@ -2826,10 +2826,6 @@ export default async function build(
                           workerResult.hasStaticProps = false
                         }
 
-                        if (workerResult.isNextImageImported) {
-                          isNextImageImported = true
-                        }
-
                         if (workerResult.hasStaticProps) {
                           ssgPages.add(page)
                           isSSG = true
@@ -2896,6 +2892,10 @@ export default async function build(
                             `\`pages${page}\` ${STATIC_STATUS_PAGE_GET_INITIAL_PROPS_ERROR}`
                           )
                         }
+                      }
+
+                      if (workerResult.isNextImageImported) {
+                        isNextImageImported = true
                       }
                     } catch (err) {
                       if (
