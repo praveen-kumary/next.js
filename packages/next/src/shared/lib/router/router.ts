@@ -982,11 +982,15 @@ export default class Router implements BaseRouter {
       return
     }
 
+    const currentAs = addBasePath(
+      addLocale(this.asPath, this.locale, this.defaultLocale)
+    )
+
     // Safari fires popstateevent when reopening the browser.
     if (
       isFirstPopStateEvent &&
       this.locale === state.options.locale &&
-      state.as === this.asPath
+      state.as === currentAs
     ) {
       return
     }
@@ -1022,7 +1026,7 @@ export default class Router implements BaseRouter {
     // can be caused by navigating back from an external site
     if (
       this.isSsr &&
-      as === addBasePath(this.asPath) &&
+      as === currentAs &&
       pathname === addBasePath(this.pathname)
     ) {
       return

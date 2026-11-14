@@ -441,6 +441,30 @@ describe('i18n Support', () => {
           expect(json.post).toBe(true)
         }
       })
+
+      it('should not re-render or trigger route change on popstate back to initial entry for non-default locales (#101755)', async () => {
+        for (const locale of nonDomainLocales) {
+          const localePath = locale === 'en' ? '' : `/${locale}`
+          const browser = await next.browser(`${localePath}/`)
+          await browser.waitForElementByCss('#index')
+
+          await browser.eval(`
+            window.__routeChangeStarts = 0
+            window.next.router.events.on('routeChangeStart', () => {
+              window.__routeChangeStarts++
+            })
+            history.pushState(null, '', '${localePath || '/'}/#modal')
+          `)
+
+          await browser.back()
+
+          // Allow any unexpected popstate routeChangeStart event to fire
+          await new Promise((resolve) => setTimeout(resolve, 500))
+
+          const changeStarts = await browser.eval('window.__routeChangeStarts')
+          expect(changeStarts).toBe(0)
+        }
+      })
     }
 
     beforeAll(async () => {
